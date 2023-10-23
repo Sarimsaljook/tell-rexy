@@ -19,7 +19,7 @@ const Login = () => {
           <Navbar.Brand  href="#home">
             <img
               src={require('./assets/tellRexyNavbarLogo.png')}
-              width="190"
+              width="180"
               height="70"
               className="d-inline-block align-top"
               alt="logo"
