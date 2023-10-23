@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
@@ -18,9 +18,9 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 const Home = () => {
     const location = useLocation();
     const employeeID = location.state.employeeID;
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const [feedback, setFeeback] = useState('');
+    const [feedback, setFeedback] = useState('');
 
     const {
         transcript,
@@ -32,6 +32,17 @@ const Home = () => {
       if (!browserSupportsSpeechRecognition) {
        alert('YOUR BROSWER DOSENT SUPPORT SPEECH REOCNGNTION!')
       }
+
+      const handleInputChange = (e) => {
+        setFeedback(e.target.value);
+      };
+
+      useEffect(() => {
+        if (listening && transcript) {
+          setFeedback(transcript);
+        }
+      }, [transcript, listening]);
+    
 
   return (
     <div>
@@ -77,13 +88,12 @@ const Home = () => {
               className="d-inline-block align-top"
               alt="logo"
               style={{ marginLeft: 100, marginTop: 170 }}
-              onMouseDown={SpeechRecognition.startListening} // Start listening when mouse is pressed down
-              onMouseUp={SpeechRecognition.stopListening} // Stop listening when mouse is released
+              onClick={() => listening ? SpeechRecognition.stopListening() : SpeechRecognition.startListening()}
             />
 
 <Form>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Control value={transcript} onChange={(e) => setFeeback(e.target.value)} style={{ width: 1000, marginLeft: 170, marginTop: -48, height: 50 }} type="email" placeholder="Bird Happy birthday to you" />
+        <Form.Control value={feedback} onChange={handleInputChange} style={{ width: 1000, marginLeft: 170, marginTop: -48, height: 50 }} type="email" placeholder="Bird Happy birthday to you" />
       </Form.Group>
     </Form> 
 
