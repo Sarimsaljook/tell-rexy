@@ -12,6 +12,8 @@ import { useLocation } from 'react-router-dom';
 import { database } from './firebase';
 import { ref, set } from 'firebase/database';
 
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
 
 const Home = () => {
     const location = useLocation();
@@ -19,6 +21,17 @@ const Home = () => {
     const navigate = useNavigate()
 
     const [feedback, setFeeback] = useState('');
+
+    const {
+        transcript,
+        listening,
+        resetTranscript,
+        browserSupportsSpeechRecognition
+      } = useSpeechRecognition();
+    
+      if (!browserSupportsSpeechRecognition) {
+       alert('YOUR BROSWER DOSENT SUPPORT SPEECH REOCNGNTION!')
+      }
 
   return (
     <div>
@@ -64,11 +77,13 @@ const Home = () => {
               className="d-inline-block align-top"
               alt="logo"
               style={{ marginLeft: 100, marginTop: 170 }}
+              onMouseDown={SpeechRecognition.startListening} // Start listening when mouse is pressed down
+              onMouseUp={SpeechRecognition.stopListening} // Stop listening when mouse is released
             />
 
 <Form>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Control onChange={(e) => setFeeback(e.target.value)} style={{ width: 1000, marginLeft: 170, marginTop: -48, height: 50 }} type="email" placeholder="Bird Happy birthday to you" />
+        <Form.Control value={transcript} onChange={(e) => setFeeback(e.target.value)} style={{ width: 1000, marginLeft: 170, marginTop: -48, height: 50 }} type="email" placeholder="Bird Happy birthday to you" />
       </Form.Group>
     </Form> 
 
